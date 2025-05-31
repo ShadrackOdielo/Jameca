@@ -6,8 +6,17 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxt/eslint',
     '@nuxt/content',
-    '@nuxt/image'
+    '@nuxt/image',
+    '@nuxtjs/supabase'
   ],
+  supabase:{
+    redirectOptions: {
+      login: '/login',
+      callback: '/confirm',
+      saveRedirectToCookie: true
+    }
+  },
+  
 
   css: ['~/assets/css/main.css'],
 
