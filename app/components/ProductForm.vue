@@ -4,73 +4,67 @@
         <h1 class="text-2xl font-bold mb-4">Add Product</h1>
     </template>
     <form @submit.prevent="handleSubmit">
-        <div class="flex flex-cols-2 gap-6">
+        <div class="flex flex-row md:flex-cols-2 gap-6">
             <div class="flex flex-col">
-            <UCard :ui="{body:'grid grid-cols-2 gap-2 ',header:'w-full ring-0'}" class="mb-6 ring-0">
-                <template #header>
-                    <h2 class="text-lg font-semibold">Basic Information</h2>
-                </template>
-
                 <!-- Existing fields -->
-                <UFormField label="Product Name">
-                    <UInput v-model="product.name" placeholder="Product Name" required />
-                </UFormField>
-                <UFormField label="Description">
-                    <UInput v-model="product.description" placeholder="Description" type="textarea" />
-                </UFormField>
-                <UFormField label="Long Description">
-                    <UTextarea v-model="product.long_description" placeholder="Long Description" type="textarea" />
-                </UFormField>
-                <UFormField label="Category">
-                    <USelect v-model="product.category_id" :items="categories" placeholder="Select Category" required />
-                </UFormField>
-                <UFormField label="Brand">
-                    <UInput v-model="product.brand" placeholder="Brand" required />
-                </UFormField>
-                <UFormField label="Is Active?">
-                    <UCheckbox v-model="product.isActive">Is Active?</UCheckbox>
-                </UFormField>
-                <UFormField label="Is Featured?">
-                    <UCheckbox v-model="product.isFeatured">Is Featured?</UCheckbox>
-                </UFormField>
-            </UCard>
+                <UCard :ui="{body:'grid grid-cols-2 gap-2 ',header:'w-full ring-0'}" class="mb-6 ring-0">
+                    <template #header>
+                        <h2 class="text-lg font-semibold">Basic Information</h2>
+                    </template>
+                    <UFormField label="Product Name">
+                        <UInput v-model="product.name" placeholder="Product Name" required />
+                    </UFormField>
+                    <UFormField label="Category">
+                        <USelect v-model="product.category_id" :items="categories" placeholder="Select Category" required />
+                    </UFormField>
+                    <UFormField label="Description" class="col-span-2 w-full" >
+                        <UInput v-model="product.description" placeholder="Description" />
+                    </UFormField>
+                    <UFormField label="Long Description" class="col-span-2 w-full">
+                        <UTextarea v-model="product.long_description" placeholder="Long Description"  />
+                    </UFormField>
+                    
+                    <UFormField label="Brand">
+                        <UInput v-model="product.brand" placeholder="Brand" required />
+                    </UFormField>
+                    <UFormField label="Is Active?">
+                        <UCheckbox v-model="product.isActive">Is Active?</UCheckbox>
+                    </UFormField>
+                    <UFormField label="Is Featured?">
+                        <UCheckbox v-model="product.isFeatured">Is Featured?</UCheckbox>
+                    </UFormField>
 
-            <!-- Variants Section -->
-            <UCard :ui="{body:'flex flex-col gap-4',header:'ring-0'}" class="mb-6 ring-0">
-                <template #header>
-                    <h2 class="text-lg font-semibold">Product Variants</h2>
-                </template>
-                <div v-for="(variant, index) in product.variants" :key="index" class="flex items-center gap-4">
-                    <UFormField label="Size">
-                        <UInput v-model="variant.size" placeholder="Size (e.g., S, M, L, XL, 42)" />
+                    <UFormField label="Variants" class="col-span-2">
+                        <p class="text-sm text-gray-500 mb-2">Add product variants (size can be S,M,L or 22,34 ...)</p>
+                        <div class="flex flex-col gap-2">
+                            <div v-for="(variant, index) in product.variants" :key="index" class="flex items-center gap-2">
+                                <UInput v-model="variant.size" placeholder="Size" class="w-1/3" />
+                                <UInput v-model.number="variant.price" placeholder="Price" type="number" class="w-1/3" />
+                                <UInput v-model.number="variant.stock" placeholder="Stock" type="number" class="w-1/3" />
+                                <UButton
+                                    icon="i-lucide-trash-2"
+                                    variant="ghost"
+                                    class="ml-2"
+                                    @click="removeVariant(index)"
+                                />
+                            </div>
+                            <UButton
+                                label="Add Variant"
+                                icon="i-lucide-plus"
+                                variant="outline"
+                                class="mt-2"
+                                @click="addVariant"
+                            />
+                        </div>
                     </UFormField>
-                    <UFormField label="Price ($)">
-                        <UInput v-model="variant.price" placeholder="Price ($)" type="number" />
-                    </UFormField>
-                    <UFormField label="Stock Quantity">
-                        <UInput v-model="variant.stock" placeholder="Stock Quantity" type="number" />
-                    </UFormField>
-                    <UButton
-                        icon="i-lucide-trash-2"
-                        variant="ghost"
-                        class="text-red-500"
-                        @click="removeVariant(index)"
-                    />
-                </div>
-                <UButton
-                    label="Add Variant"
-                    icon="i-lucide-plus"
-                    variant="outline"
-                    @click="addVariant"
-                />
-            </UCard>
+                </UCard>
             </div>
             <!-- Images Upload Section -->
-            <UCard :ui="{body:'flex flex-col gap-4',header:'ring-0'}" class="mb-6 ring-0">
+            <UCard :ui="{body:'flex flex-col gap-4',header:'ring-0'}" class="mb-6 ring-0 ">
                 <template #header>
                     <h2 class="text-lg text-center font-semibold">Images Upload</h2>
                 </template>
-                <div class="flex flex-col items-center">
+                <div class="flex flex-col items-center ">
                     <UButton
                         label="Upload Images"
                         icon="i-lucide-upload"
@@ -86,24 +80,34 @@
                         accept="image/*"
                         class="hidden"
                         @change="handleImageChange"
-                    />
+                    >
                 </div>
-                <div class="mt-4 grid grid-cols-2 gap-4">
-                    <div v-for="(img, index) in product.images" :key="index" class="relative">
-                        <img :src="img" alt="Product Image" class="w-full h-32 object-cover rounded-md" />
+                <UButton
+                    v-if="imagePreviews.length > 0"
+                    label="Clear Images"
+                    icon="i-lucide-trash-2"
+                    variant="ghost"
+                    class="mb-4"
+                    @click="imagePreviews = []"
+                />
+                <div class=" flex flex-col gap-2">
+                    <div v-for="(img, index) in imagePreviews" :key="index" class="relative  flex  flex-row gap-4">
+                        <img :src="img.previewUrl" alt="Image Preview" class="w-auto h-8 object-cover rounded-md" />
+                        <div class="flex flex-col">
+                            <span class="text-sm font-semibold">{{ img.file.name }}</span>
+                            <span class="text-xs text-gray-500">{{ (img.file.size / 1024).toFixed(2) }} KB</span>
+                        </div>
                         <UButton
                             icon="i-lucide-trash-2"
                             variant="ghost"
-                            class="absolute top-1 right-1 bg-white rounded-full p-1"
-                            @click="product.images.splice(index, 1)"
+                            @click="imagePreviews.splice(index, 1)"
                         />
                     </div>
                 </div>
             </UCard>
         </div>
-        <div class="flex justify-end space-x-2">
-            <UButton type="submit" label="Create Product" icon="i-lucide-plus" />
-            <UButton label="Cancel" variant="outline" @click="router.back()" />
+        <div class="w-full flex-none justify-between space-x-2">
+            <UButton type="submit" label="Submit Form" />
         </div>
     </form>
 </UCard>
@@ -124,10 +128,15 @@ type Product = {
     long_description: string;
     category_id: string;
     brand: string;
-    images: string[];
+    images: string[]; // URLs of uploaded images
     isActive: boolean;
     isFeatured: boolean;
     variants: Variant[];
+};
+
+type ImagePreview = {
+    file: File;
+    previewUrl: string;
 };
 
 const supabase = useSupabaseClient();
@@ -145,6 +154,7 @@ const product = ref<Product>({
 
 const categories = ref<{ label: string; value: string }[]>([]);
 const imageInput = ref<HTMLInputElement | null>(null);
+const imagePreviews = ref<ImagePreview[]>([]); // Store image previews
 const router = useRouter();
 const toast = useToast();
 
@@ -160,20 +170,13 @@ const fetchCategories = async () => {
     }
 };
 
-const handleImageChange = async (e: Event) => {
+const handleImageChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
     if (target.files) {
         const files = Array.from(target.files);
         for (const file of files) {
-            const { data, error } = await supabase.storage
-                .from('images')
-                .upload(`products/${Date.now()}-${file.name}`, file);
-            if (error) {
-                console.error('Error uploading image:', error);
-            } else {
-                const publicUrl = supabase.storage.from('images').getPublicUrl(data.path).data.publicUrl;
-                product.value.images.push(publicUrl);
-            }
+            const previewUrl = URL.createObjectURL(file);
+            imagePreviews.value.push({ file, previewUrl });
         }
     }
 };
@@ -188,6 +191,24 @@ const removeVariant = (index: number) => {
 
 const handleSubmit = async () => {
     try {
+        // Upload images
+        const uploadedImageUrls: string[] = [];
+        for (const imagePreview of imagePreviews.value) {
+            const { data, error } = await supabase.storage
+                .from('images')
+                .upload(`products/${Date.now()}-${imagePreview.file.name}`, imagePreview.file);
+            if (error) {
+                console.error('Error uploading image:', error);
+                throw error;
+            }
+            const publicUrl = supabase.storage.from('images').getPublicUrl(data.path).data.publicUrl;
+            uploadedImageUrls.push(publicUrl);
+        }
+
+        // Add uploaded image URLs to the product
+        product.value.images = uploadedImageUrls;
+
+        // Insert product data
         const { data: productData, error: productError } = await supabase
             .from('products')
             .insert({

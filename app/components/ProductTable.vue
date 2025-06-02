@@ -116,19 +116,19 @@ const columns: TableColumn<Product>[] = [
     cell: ({ row }) => h('div', { class: 'flex space-x-2' }, [
       h('UButton', {
         icon: 'i-lucide-eye',
-        color: 'gray',
+        color: 'secondary',
         variant: 'ghost',
         onClick: () => viewProduct(row.original.uuid)
       }),
       h('UButton', {
         icon: 'i-lucide-pencil',
-        color: 'blue',
+        color: 'primary',
         variant: 'ghost',
         onClick: () => editProduct(row.original.uuid)
       }),
       h('UButton', {
         icon: 'i-lucide-trash-2',
-        color: 'red',
+        color: 'error',
         variant: 'ghost',
         onClick: () => deleteProduct(row.original.uuid)
       })
@@ -162,7 +162,7 @@ onMounted(fetchProducts)
   <div class="w-full">
     <div class="flex justify-between items-center mb-4">
       <h2 class="text-xl font-bold">Product List</h2>
-      <UButton icon="i-lucide-refresh-cw" @click="fetchProducts" :loading="loading">
+      <UButton icon="i-lucide-refresh-cw" :loading="loading" @click="fetchProducts">
         Refresh
       </UButton>
         <UButton icon="i-lucide-plus" to="/products/create" color="primary">

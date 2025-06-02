@@ -2,6 +2,6 @@
     <div class="flex flex-col   h-screen">
         
         
-    <ProductTable />
+    <ProductTable2 />
     </div>
 </template>
